@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 
 class BattleScreen extends StatefulWidget {
@@ -31,6 +32,9 @@ class _BattleScreenState extends State<BattleScreen> with TickerProviderStateMix
   List<Bullet> bullets = [];
   int frameCount = 0;
   late Ticker _ticker;
+  
+  // Focus for keyboard
+  final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
@@ -47,6 +51,7 @@ class _BattleScreenState extends State<BattleScreen> with TickerProviderStateMix
   @override
   void dispose() {
     _ticker.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -155,7 +160,7 @@ class _BattleScreenState extends State<BattleScreen> with TickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     return RawKeyboardListener(
-      focusNode: FocusNode(),
+      focusNode: _focusNode,
       autofocus: true,
       onKey: _handleKeyEvent,
       child: Scaffold(
